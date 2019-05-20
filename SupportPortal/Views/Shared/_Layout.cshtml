@@ -1,0 +1,232 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Support Portal</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/Content/bootstrap.css" />
+        <link rel="stylesheet" href="~/Content/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+
+    <style>
+        .dropbtn {
+            background-color: rgba(0,0,0,0.2);
+            color: rgba(156, 156, 156, 1);
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+            .dropbtn:hover, .dropbtn:focus {
+                background-color: #808080;
+            }
+
+        .dropdown {
+            float: right;
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            right: 0;
+            z-index: 1;
+        }
+
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+        .dropdown a:hover {
+            background-color: #ddd;
+        }
+
+        .show {
+            display: block;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+        function dropdown() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        // Close the dropdown if the user clicks outside of it
+        //window.onclick = function (event) {
+        //    if (!event.target.matches('.dropbtn')) {
+
+        //        var dropdowns = document.getElementsByClassName("dropdown-content");
+        //        var i;
+        //        for (i = 0; i < dropdowns.length; i++) {
+        //            var openDropdown = dropdowns[i];
+        //            if (openDropdown.classList.contains('show')) {
+        //                openDropdown.classList.remove('show');
+        //            }
+        //        }
+        //    }
+        //}
+
+        //TODO: Figure out why the other one didn't work
+        window.onclick = function (event) {
+            var classes = event.target.className.split(' ');
+            var found = false; var i = 0;
+            while (i < classes.length && !found) {
+                if (classes[i] == 'dropbtn') found = true;
+                else ++i;
+            }
+            if (!found) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+
+
+            <div class="navbuttonsleft" style="float: left; margin-left: 18.75%;">
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="javascript:void(0)">FSI - Updates &#8595</a>
+                            <div class="dropdown-content">
+                                <a href="/SupportPortal/Support/ProcessReports/1">Process Reports</a>
+                                <a href="/SupportPortal/Support/DalimWebApp/Prod">Create/Update ES Metadata</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="javascript:void(0)">Queries &#8595</a>
+                            <div class="dropdown-content">
+                                <a href="/SupportPortal/Support/QuerySelect/checkimportspider">Check Import Spider</a>
+                                <a href="/SupportPortal/Support/QuerySelect/fsimasthead">FSI - Masthead</a>
+                                <a href="/SupportPortal/Support/QuerySelect/turnkeylookup">TurnkeyVDP - LookUp</a>
+                                <a href="/SupportPortal/Support/QuerySelect/turnkeystatus">TurnkeyVDP - Statuses</a>
+                                <a href="/SupportPortal/Support/QuerySelect/wrappagecodewaiting">Wrap - Check Page Build</a>
+                                <a href="/SupportPortal/Support/QuerySelect/wrapdoubles">Wrap - Check Doubles</a>
+                                @*<a href="/SupportPortal/Support/QuerySelect/wrappagecodedetails">Wrap - Page Code Details</a>*@
+                                <a href="/SupportPortal/Support/QuerySelect/wrapdbstatus">Wrap - DB Statuses</a>
+                                <a href="/SupportPortal/Support/QuerySelect/spider">Spider JDF</a>
+                                <a href="/SupportPortal/Support/QuerySelect/spiderimposition">Spider JDF Imposition</a>
+                                <a href="/SupportPortal/Support/QuerySelect/livetodev">Move Live Job to Dev</a>
+                                <a href="/SupportPortal/Support/QuerySelect/newlivejob">New Live Test Job</a>
+                                <a href="/SupportPortal/Support/QuerySelect/processexec">Support.ProcessExecution</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="javascript:void(0)">GS &#8595</a>
+                            <div class="dropdown-content">
+                                <a href="/SupportPortal/Support/KnowledgeBase">Knowledge Base</a>
+                                <a href="/SupportPortal/Support/GSWebPortal">GS Web Portal</a>
+                                <a href="/SupportPortal/Support/WebEIGSystem">Web EIG System</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div><div class="navbuttonsright" style="margin-left: 44.7%;">
+                <div class="navbar-header">
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/SupportPortal">Support Portal</a>
+                </div>
+                <div class="navbar-collapse collapse" style="margin-left: 11%;">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="javascript:void(0)">Services &#8595</a>
+                            <div class="dropdown-content">
+                                <a href="/SupportPortal/Support/DalimService/Prod">Dalim Service</a>
+                                <a href="/SupportPortal/Support/Services/swautopagebuild">Valassis.SWAutoPageBuild</a>
+                                <a href="/SupportPortal/Support/Services/turnkey">Valassis.Turnkey</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="javascript:void(0)">ES &#8595</a>
+                            <div class="dropdown-content">
+                                <a href="/SupportPortal/Support/DalimAPIDoc">Dalim API Documentation</a>
+                                <a href="/SupportPortal/Support/DalimAPITestDev">API Demo Platform</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="javascript:void(0)">Dev &#8595</a>
+                            <div class="dropdown-content">
+                                <a href="/SupportPortal/Support/DalimService/Dev">Dalim Service</a>
+                                <a href="/SupportPortal/Support/ProcessReports/4">Process Reports</a>
+                                <a href="/SupportPortal/Support/DalimWebApp/Dev">Create/Update ES Metadata</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2018 - Support Portal - v1.2</p>
+        </footer>
+    </div>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @RenderSection("Scripts", required: false)
+</body>
+
+</html>

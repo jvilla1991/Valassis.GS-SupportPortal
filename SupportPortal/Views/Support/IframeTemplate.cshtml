@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "IframeTemplate";
+}
+
+<br />
+<div>
+    <h3>@ViewBag.Message</h3>
+    <a href="@ViewBag.URL">Go to Site (Leave Portal)</a>
+</div>
+@if (ViewBag.Next != null)
+{
+    <div>
+        <a href="@ViewBag.Next" class="btn">@ViewBag.NextMessage</a>
+    </div>
+}
+<div>
+    <iframe src="@ViewBag.URL" height="600em" width="100%"></iframe>
+</div>

@@ -1,0 +1,126 @@
+﻿@model System.Data.DataTable
+@using System.Data
+
+@{
+    /**/
+
+    ViewBag.Title = "DBResults";
+}
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<script>
+    $(document).ready(function () {
+        $("#checkAll").click(function () {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+    });
+
+    // Collects all checked elements on the page, and will send the values back to the Controllers in the form of "ids"
+    function deleteRecords() {
+        // Gives a confirmation prompt for delete
+        if (confirm("Are you sure you want to delete? (No Undo)")) {
+            var checkboxes = document.getElementsByTagName('input');
+            var checked = [];
+            // This ensures that the query box always returns checked. This will element will be removed and user in the Controller.
+            $('#querycheckbox').prop('checked', true);
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].type == 'checkbox' && checkboxes[i].checked == true && checkboxes[i].value != "on") {
+                    checked.push(checkboxes[i].value);
+                }
+            }
+            checked.push([checkboxes.length - 1].value);
+
+            console.log(checked);
+
+            $.post('/Support/QueryDelete', $.param({ data: checked }, true), function (data) { });
+
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                url: '/Support/QueryDelete',
+                data: JSON.stringify(checked),
+                success: function (data) {
+                    if (data.success == true) {
+                        location.reload();
+                    }
+                }
+            });
+        }
+        return false;
+
+    }
+</script>
+
+<h2>Portal</h2>
+
+<h3>Number of Records: @Model.Rows.Count</h3>
+
+<table border="1" width="100%" class="table table-hover">
+
+    <thead>
+        <tr>
+            @*Delete All check Box only appears if the incoming table name is "spider" or "spider imposition"*@
+            @if (Model.TableName.Equals("spider") || Model.TableName.Equals("spiderimposition"))
+            {
+                <th><input type="checkbox" id="checkAll"> Delete All</th>
+            }
+            @foreach (DataColumn col in Model.Columns)
+            {
+                <th>@col.ColumnName</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Rows.Count; i++)
+        {
+            //Every other record is going to have a different colour background for clarity
+            if (i % 2 == 0)
+            {
+                <div>
+                    <tr style="background-color:hsla(0, 100%, 90%, 0.3);">
+                        @*check Box only appears if the incoming table name is "spider" or "spider imposition"*@
+                        @if (Model.TableName.Equals("spider") || Model.TableName.Equals("spiderimposition"))
+                        {
+                            <td><input type="checkbox" class="checkbox" value="@Model.Rows[i]["RecordID"]"></td>
+                        }
+                        @foreach (DataColumn col in Model.Columns)
+                        {
+                            <td>@Model.Rows[i][col.ColumnName]</td>
+                        }
+                    </tr>
+                </div>
+            }
+            else
+            {
+                <div>
+                    <tr>
+                        @*check Box only appears if the incoming table name is "spider" or "spider imposition"*@
+                        @if (Model.TableName.Equals("spider") || Model.TableName.Equals("spiderimposition"))
+                        {
+                            <td><input type="checkbox" class="checkbox" value="@Model.Rows[i]["RecordID"]"></td>
+                        }
+                        @foreach (DataColumn col in Model.Columns)
+                        {
+                            <td>@Model.Rows[i][col.ColumnName]</td>
+                        }
+                    </tr>
+                </div>
+            }
+        }
+    </tbody>
+
+</table>
+
+@*Delete Button only appears if the incoming table name is "spider" or "spider imposition"*@
+@if (Model.TableName.Equals("spider") || Model.TableName.Equals("spiderimposition"))
+{
+    <button onclick="deleteRecords()">Delete</button>
+}
+
+@*This hidden checkbox will always return checked when the delete button is pushed. This will
+have a different value than the returned ids and will be seperated from the string array later in the Controller*@
+<input hidden type="checkbox" id="querycheckbox" value="@Model.TableName" />

@@ -1,0 +1,126 @@
+﻿@model SupportPortal.Models.DAO
+
+@{
+    ViewBag.Title = "DBParams";
+}
+
+
+<h2>DBParams</h2>
+@using (Html.BeginForm("QueryRead", "Support", FormMethod.Post))
+{
+<table cellpadding="0" cellspacing="0">
+    <tr>
+        <td>Query: </td>
+        @Html.HiddenFor(model => model.query, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.Message1 } })
+        <td>
+            @Html.DropDownListFor(m => m.query, new List<SelectListItem>
+{ new SelectListItem{Text="Check Import Spider", Value="checkimportspider"},
+new SelectListItem{Text="FSI - Masthead", Value="fsimasthead"},
+new SelectListItem{Text="TurnKey - VDP Look Up", Value="turnkeylookup"},
+new SelectListItem{Text="TurnKey - VDP Statuses", Value="turnkeystatus"},
+new SelectListItem{Text="Wrap - Check Page Codes waiting for Approval", Value="wrappagecodewaiting"},
+new SelectListItem{Text="Wrap - Check Doubles", Value="wrapdoubles"},
+new SelectListItem{Text="Wrap - Page Code Details", Value="wrappagecodedetails"},
+new SelectListItem{Text="Wrap - DB Statuses", Value="wrapdbstatus"},
+new SelectListItem{Text="Spider JDF", Value="spider"},
+new SelectListItem{Text="Spider JDF Imposition", Value="spiderimposition"},
+new SelectListItem{Text="Move Job from Live to Dev", Value="livetodev"},
+new SelectListItem{Text="Create Test Job", Value="newlivejob"},
+new SelectListItem{Text="Support.ProcessExecution", Value="processexec"},
+}, "Please select", htmlAttributes: new { @disabled = "" })
+        </td>
+    </tr>
+    <tr>
+        <th colspan="2" align="center">Enter Parameters</th>
+    </tr>
+    @if (ViewBag.Query.Equals("wrapdoubles") || ViewBag.Query.Equals("wrappagecodewaiting") ||
+        ViewBag.Query.Equals("wrappagecodedetails"))
+    {
+        <tr>
+            <td>In Home Week: </td>
+            <td>
+                @Html.TextBoxFor(m => m.inhomeweek)
+            </td>
+        </tr>
+    }
+    @if (ViewBag.Query.Equals("fsimasthead") || ViewBag.Query.Equals("spider") ||
+        ViewBag.Query.Equals("livetodev") || ViewBag.Query.Equals("spiderimposition") ||
+        ViewBag.Query.Equals("turnkeylookup") || ViewBag.Query.Equals("newlivejob"))
+    {
+        <tr>
+            <td>Job ID: </td>
+            <td>
+                @Html.TextBoxFor(m => m.jobid)
+            </td>
+        </tr>
+    }
+    @if (ViewBag.Query.Equals("newlivejob"))
+    {
+        <tr>
+            <td>New Job ID:  </td>
+            <td>
+                @Html.TextBoxFor(m => m.newjobid)
+            </td>
+        </tr>
+    }
+    @if (ViewBag.Query.Equals("spider") || ViewBag.Query.Equals("spiderimposition"))
+    {
+        <tr>
+            <td>Section ID:  </td>
+            <td>
+                @Html.TextBoxFor(m => m.sectionid)
+            </td>
+        </tr>
+    }
+    @if (ViewBag.Query.Equals("w"))
+    {
+        <tr>
+            <td>Status ID: </td>
+            <td>
+                @Html.TextBoxFor(m => m.statusid)
+            </td>
+        </tr>
+    }
+    @if (ViewBag.Query.Equals("fsimasthead"))
+    {
+        <tr>
+            <td>Form Region ID: </td>
+            <td>
+                @Html.TextBoxFor(m => m.formregionid)
+            </td>
+        </tr>
+        <tr>
+            <td>Market ID: </td>
+            <td>
+                @Html.TextBoxFor(m => m.marketid)
+            </td>
+        </tr>
+    }
+    @if (ViewBag.Query.Equals("turnkeylookup"))
+    {
+        <tr>
+            <td>UAVC: </td>
+            <td>
+                @Html.TextBoxFor(m => m.uavc)
+            </td>
+        </tr>
+    }
+    @if (ViewBag.Query.Equals("wrappagecodedetails") || ViewBag.Query.Equals("wrappagecodewaiting"))
+    {
+        <tr>
+            <td>PageCodes: </td>
+        </tr>
+        <tr>
+            <td>(More than one: 4920,5731) </td>
+            <td>
+                @Html.TextBoxFor(m => m.pagecodes)
+            </td>
+        </tr>
+    }
+    <tr>
+        <td></td>
+        <td><input type="submit" value="Submit" /></td>
+    </tr>
+</table>
+}
+
