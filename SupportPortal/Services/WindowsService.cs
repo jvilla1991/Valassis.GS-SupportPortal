@@ -1,30 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
 using System.ServiceProcess;
-using System.Web;
 
 namespace SupportPortal.Models
 {
-    public class Service
+    public class ServiceViewModel
     {
+        public class ServiceName
+        {
+            private ServiceName(string value) { Value = value; }
+
+            public string Value { get; set; }
+
+            public static string CFUManager { get { return ("Valassis CFU.CentralFileManager"); } }
+            public static string MTWatcher { get { return ("Valassis CFU.MassTransitWatcher"); } }
+            public static string Turnkey { get { return ("Valassis.Turnkey"); } }
+            public static string SWAutoPageBuild { get { return ("Valassis.SWAutoPageBuild"); } }
+        }
+
+        public ServiceViewModel(string serviceNameParam)
+        {
+            this.NameParam = serviceNameParam;
+            SetName(serviceNameParam);
+            Server = "valvcsgsw001vm";
+        }
         private ServiceController sc;
-        private string name { get; set; }
-        public String server { get; set; }
-        private string status { get; set; }
+        public string Name { get; set; }
+        public string NameParam { get; set; }
+        public string Server { get; set; }
+        public string Status { get; set; }
+        public bool Exception { get; internal set; }
 
         // initializes an object that uses the service name and server to connect to a server
-        internal String Initialize()
+        internal void Initialize()
         {
-            try
-            {
-                sc = new ServiceController(name, server);
-            } catch (Exception e)
-            {
-                return e.ToString();
-            }
-            return "good";
+            sc = new ServiceController(Name, Server);
         }
 
         // Starts a service
@@ -42,7 +51,7 @@ namespace SupportPortal.Models
                 }
                 else
                 {
-                    return "Could not start, unidentified error";
+                    return "Could not start: " + ex.Message;
                 }
             }
             return "Service started successfully";
@@ -59,38 +68,46 @@ namespace SupportPortal.Models
             {
                 if (ex.InnerException.ToString().Contains("already stopped"))
                 {
-                    return "Service already stopped";
+                    return "Service not currently running";
                 }
                 else
                 {
-                    return "Could not stop, unidentified error";
+                    return "Could not stop: " + ex.Message;
                 }
             }
             return "Service stopped successfully";
         }
 
         // Gets status of targeted service
-        internal dynamic GetStatus()
+        internal void GetStatus()
         {
-            return "Status: " + sc.Status;
+            sc.Refresh();
+            this.Status = sc.Status.ToString();
         }
 
         // Takes a service name param from a url and returns the name of the service on the server
         internal void SetName(string serviceNameParam)
         {
-            if (serviceNameParam.Equals("turnkey"))
+            switch (serviceNameParam)
             {
-                name = "Valassis.Turnkey";
-            }
-            else if (serviceNameParam.Equals("swautopagebuild"))
-            {
-                name = "Valassis.SWAutoPageBuild";
+                case "turnkey":
+                    Name = ServiceName.Turnkey;
+                    break;
+                case "swautopagebuild":
+                    Name = ServiceName.SWAutoPageBuild;
+                    break;
+                case "cfumanager":
+                    Name = ServiceName.CFUManager;
+                    break;
+                case "mtwatcher":
+                    Name = ServiceName.MTWatcher;
+                    break;
             }
         }
 
         internal dynamic GetName()
         {
-            return name;
+            return Name;
         }
     }
 }

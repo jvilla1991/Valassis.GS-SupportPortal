@@ -131,19 +131,19 @@
                         <li class="dropdown">
                             <a href="javascript:void(0)">Queries &#8595</a>
                             <div class="dropdown-content">
-                                <a href="/SupportPortal/Support/QuerySelect/checkimportspider">Check Import Spider</a>
-                                <a href="/SupportPortal/Support/QuerySelect/fsimasthead">FSI - Masthead</a>
-                                <a href="/SupportPortal/Support/QuerySelect/turnkeylookup">TurnkeyVDP - LookUp</a>
-                                <a href="/SupportPortal/Support/QuerySelect/turnkeystatus">TurnkeyVDP - Statuses</a>
-                                <a href="/SupportPortal/Support/QuerySelect/wrappagecodewaiting">Wrap - Check Page Build</a>
-                                <a href="/SupportPortal/Support/QuerySelect/wrapdoubles">Wrap - Check Doubles</a>
-                                @*<a href="/SupportPortal/Support/QuerySelect/wrappagecodedetails">Wrap - Page Code Details</a>*@
-                                <a href="/SupportPortal/Support/QuerySelect/wrapdbstatus">Wrap - DB Statuses</a>
-                                <a href="/SupportPortal/Support/QuerySelect/spider">Spider JDF</a>
-                                <a href="/SupportPortal/Support/QuerySelect/spiderimposition">Spider JDF Imposition</a>
-                                <a href="/SupportPortal/Support/QuerySelect/livetodev">Move Live Job to Dev</a>
-                                <a href="/SupportPortal/Support/QuerySelect/newlivejob">New Live Test Job</a>
-                                <a href="/SupportPortal/Support/QuerySelect/processexec">Support.ProcessExecution</a>
+                                <a href="@Url.Action("checkimportspider", "Data")">Check Import Spider</a>
+                                <a href="@Url.Action("fsimasthead", "Data")">FSI - Masthead</a>
+                                <a href="@Url.Action("turnkeylookup", "Data")">TurnkeyVDP - LookUp</a>
+                                <a href="@Url.Action("turnkeystatus", "Data")">TurnkeyVDP - Statuses</a>
+                                <a href="@Url.Action("wrappagecodewaiting", "Data")">Wrap - Check Page Build</a>
+                                <a href="@Url.Action("wrapdoubles", "Data")">Wrap - Check Doubles</a>
+                                @*<a href@Url.Action("wrappagecodedetails", "Data")">Wrap - Page Code Details</a>*@
+                                <a href="@Url.Action("wrapdbstatus", "Data")">Wrap - DB Statuses</a>
+                                <a href="@Url.Action("spider", "Data")">Spider JDF</a>
+                                <a href="@Url.Action("spiderimposition", "Data")">Spider JDF Imposition</a>
+                                <a href="@Url.Action("livetodev", "Data")">Move Live Job to Dev</a>
+                                <a href="@Url.Action("newlivejob", "Data")">New Live Test Job</a>
+                                <a href="@Url.Action("processexec", "Data")">Support.ProcessExecution</a>
                             </div>
                         </li>
                         <li class="dropdown">
@@ -171,21 +171,26 @@
                         <li class="dropdown">
                             <a href="javascript:void(0)">Services &#8595</a>
                             <div class="dropdown-content">
-                                <a href="/SupportPortal/Support/DalimService/Prod">Dalim Service</a>
-                                <a href="/SupportPortal/Support/Services/swautopagebuild">Valassis.SWAutoPageBuild</a>
-                                <a href="/SupportPortal/Support/Services/turnkey">Valassis.Turnkey</a>
+                                <a href="/SupportPortal/Support/DalimService/Prod">Dalim SOAP Service</a>
+                                <a href="@Url.Action("swautopagebuild", "Services")">AutoPageBuild</a>
+                                <a href="@Url.Action("turnkey", "Services")">Turnkey</a>
+                                <a href="@Url.Action("cfumanager", "Services")">CFUManager</a>
+                                <a href="@Url.Action("mtwatcher", "Services")">MTWatcher</a>
                             </div>
                         </li>
                         <li class="dropdown">
                             <a href="javascript:void(0)">ES &#8595</a>
                             <div class="dropdown-content">
-                                <a href="/SupportPortal/Support/DalimAPIDoc">Dalim API Documentation</a>
-                                <a href="/SupportPortal/Support/DalimAPITestDev">API Demo Platform</a>
+                                <a href="@Url.Action("DalimAPIDoc", "Support")">Dalim API Documentation</a>
+                                <a href="@Url.Action("BlanSys", "Support")">Blanchard Support</a>
+                                <a href="@Url.Action("EsCompanion", "ES")">ES Support Companion</a>
+                                @*https://blanchardsystems.zendesk.com/hc/en-us/restricted?return_to=https://blanchardsystems.zendesk.com/hc/en-us*@
                             </div>
                         </li>
                         <li class="dropdown">
                             <a href="javascript:void(0)">Dev &#8595</a>
                             <div class="dropdown-content">
+                                <a href="/SupportPortal/Support/DalimAPITestDev">API Demo Platform</a>
                                 <a href="/SupportPortal/Support/DalimService/Dev">Dalim Service</a>
                                 <a href="/SupportPortal/Support/ProcessReports/4">Process Reports</a>
                                 <a href="/SupportPortal/Support/DalimWebApp/Dev">Create/Update ES Metadata</a>

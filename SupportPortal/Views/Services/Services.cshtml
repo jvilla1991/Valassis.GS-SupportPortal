@@ -1,0 +1,17 @@
+﻿@model SupportPortal.Models.ServiceViewModel
+
+@{
+    ViewBag.Title = "Services";
+}
+    <center>
+        <h2>@Model.Name</h2>
+        <h3>@Model.Status</h3>
+
+        @if (!Model.Exception)
+        {
+            <input type="button" value="Start" onclick="location.href='@Url.Action(Model.NameParam + "/1", ViewBag.Title)'" />
+            <input type="button" value="Stop" onclick="location.href='@Url.Action(Model.NameParam + "/0", ViewBag.Title)'" />
+        }
+
+        <h3>@ViewBag.Result</h3>
+    </center>

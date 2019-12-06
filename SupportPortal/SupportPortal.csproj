@@ -166,10 +166,15 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\DataController.cs" />
+    <Compile Include="Controllers\ESController.cs" />
+    <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Controllers\SupportController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\ConfigSettings.cs" />
+    <Compile Include="Models\ES\ESCompanionViewModel.cs" />
     <Compile Include="Models\DAO.cs" />
     <Compile Include="Services\WebService.cs" />
     <Compile Include="Services\WindowsService.cs" />
@@ -187,6 +192,8 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Support Portal Updates.docx" />
+    <None Include="Properties\PublishProfiles\Dev Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Dev.pubxml" />
     <None Include="Properties\PublishProfiles\Prod.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -215,9 +222,10 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Support\Index.cshtml" />
     <Content Include="Views\Support\IframeTemplate.cshtml" />
-    <Content Include="Views\Support\DBParams.cshtml" />
-    <Content Include="Views\Support\DBResults.cshtml" />
-    <Content Include="Views\Support\Services.cshtml" />
+    <Content Include="Views\Data\DBParams.cshtml" />
+    <Content Include="Views\Data\DBResults.cshtml" />
+    <Content Include="Views\Services\Services.cshtml" />
+    <Content Include="Views\ES\EsCompanion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,169 @@
+﻿@using SupportPortal.Models
+@model ESCompanionViewModel
+@{
+    ViewBag.Title = "EsCompanion";
+
+    var fsiPane = "tab-pane active";
+    var directMailPane = "tab-pane";
+    var wrapPane = "tab-pane";
+
+    string fsiTab = "active";
+    string directMailTab = null;
+    string wrapTab = null;
+}
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<h2>ES Support Companion</h2>
+
+<div class="row-fluid">
+    <div class="span11">
+        <div class="control-group">
+            <div class="controls">
+                <label class="dropdown">
+                    @Html.DropDownListFor(m => m.CurrentEnvironmment,
+                    new SelectList(Enum.GetValues(typeof(EsEnvironment))),
+                    "Select Environment",
+                    new { @onchange = "setEnvironment(this.value)" })
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="span12">
+        <ul class="nav nav-tabs">
+            <li class="@fsiTab"><a href="#fsi" data-toggle="tab">FSI</a></li>
+            <li class="@wrapTab"><a href="#wrap" data-toggle="tab">Wrap</a></li>
+            <li class="@directMailTab"><a href="#directmail" data-toggle="tab">Direct Mail</a></li>
+        </ul>
+        @Html.HiddenFor(m => m.Customer, new { id = "hidden-customer" })
+
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="span12 tab-content">
+        <div id="fsi" class="@fsiPane">
+            -- UNDER CONSTRUCTION --
+        </div>
+        <div id="wrap" class="@wrapPane">
+            -- UNDER CONSTRUCTION --
+        </div>
+        <div id="directmail" class="@directMailPane">
+            <div class="row-fluid">
+                @Html.DropDownList("dmSelectDropDown", new List<SelectListItem>
+{ new SelectListItem{Text="Update Section Metadata", Value="dm-section-update"},
+new SelectListItem{Text="Move to \"Waiting for Print Release\"", Value="dm-section-move-print"}},
+"Please Select",
+new { @onchange = "selectAction(this.value)" })
+                <div class="span11 offset1">
+                    @using (Html.BeginForm("UpdateSectionMetadata", "ES", FormMethod.Post, new { onsubmit = "validateForm(dm)", name = "dm-section-update", id = "dm-section-update", @class = "submission-form" }))
+                    {
+                        <h4>Update Section Metadata</h4>
+                        <table>
+                            <tr>
+                                <td>In Home Week: </td>
+                                <td>@Html.TextBoxFor(m => m.JobId)</td>
+                            </tr>
+                            <tr>
+                                <td>UAVC: </td>
+                                <td>@Html.TextBoxFor(m => m.UAVC)</td>
+                            </tr>
+                            <tr>
+                                <td>IHD: </td>
+                                <td>@Html.TextBoxFor(m => m.IHD)</td>
+                            </tr>
+                            <tr>
+                                <td>--or--</td>
+                            </tr>
+                            <tr>
+                                <td>IHD: </td>
+                                <td>@Html.TextBoxFor(m => m.PageOrder)</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><button type="submit" class="btn btn-primary" disabled>Submit</button></td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+                <div class="span11 offset1">
+                    @using (Html.BeginForm("DMSectionToPrintRelease", "ES", FormMethod.Post, new { onsubmit = "validateForm(this.name)", name = "dm-section-move-print", id = "dm-section-move-print", @class = "submission-form" }))
+                    {
+                        <h4>Move Section to "Waiting for Print Release"</h4>
+                        <table>
+                            <tr>
+                                <td>In Home Week: </td>
+                                <td>@Html.TextBoxFor(m => m.JobId)</td>
+                            </tr>
+                            <tr>
+                                <td>UAVC: </td>
+                                <td>@Html.TextBoxFor(m => m.PageOrder)</td>
+                            </tr>
+                            <tr>
+                                <td>IHD: </td>
+                                <td>@Html.TextBoxFor(m => m.IHD)</td>
+                            </tr>
+                            <tr>
+                                <td>Force? </td>
+                                <td>@Html.CheckBoxFor(m => m.Force)	(Will bypass the Metadata Check)</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><button type="submit" class="btn btn-primary" disabled>Submit</button></td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+        @ViewBag.Response
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('.submission-form').attr('hidden', true);
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var target = $(e.target).attr("href");
+                switch (target) {
+                    case '#fsi':
+                        $('#hidden-customer').attr('Value', 'fsi')
+                        break;
+                    case '#wrap':
+                        $('#hidden-customer').val('wrap')
+                        break;
+                    case '#directmail':
+                        $('#hidden-customer').val('dm')
+                        break;
+                }
+            });
+        });
+
+        function setEnvironment(environment) {
+            if (environment == "Production") {
+                document.getElementsByTagName("body")[0].style = 'background-color: #bbd1ae';
+                $('.btn').removeAttr('disabled');
+            }
+            else if (environment == "Development") {
+                document.getElementsByTagName("body")[0].style = 'background-color: #c2909c';
+                $('.btn').removeAttr('disabled');
+            }
+            else {
+                $('.btn').attr('disabled', true);
+                document.getElementsByTagName("body")[0].style = 'background-color: #ffffff';
+            }
+        }
+
+        function selectAction(id) {
+            $('.submission-form').attr('hidden', true);
+            var id = '#' + id;
+            $(id).removeAttr("hidden");
+        }
+
+    </script>
+}
+
