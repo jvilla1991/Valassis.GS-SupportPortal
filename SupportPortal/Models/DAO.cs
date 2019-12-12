@@ -8,12 +8,13 @@ using System.Data;
 using System.Data.SqlTypes;
 using System.Threading.Tasks;
 using SupportPortal.Services;
+using SupportPortal.Infrastructure;
 
 namespace SupportPortal.Models
 {
     public class DAO
     {
-
+        private static readonly Common COMMON = new Common();
 
         private SqlConnection databaseConn { get; set; }
         public string query { get; set; }
@@ -25,6 +26,10 @@ namespace SupportPortal.Models
         public string marketid { get; set; }
         public string formregionid { get; set; }
         public string uavc { get; set; }
+        public string pageOrder { get; set; }
+        public string ihd { get; set; }
+        public string ovid { get; set; }
+        public string fileName { get; set; }
         //public List<string> pagecodes { get; set; }
         public string pagecodes { get; set; }
 
@@ -36,7 +41,6 @@ namespace SupportPortal.Models
             // Selects a query AND target database based on the query variable that is set form the controller
             string selectedQuery = EstablishQuery();
             dataTable.TableName = query;
-
             try
             {
                 databaseConn.Open();
@@ -53,19 +57,42 @@ namespace SupportPortal.Models
             {
                 Console.WriteLine(ex);
             }
-
             return dataTable;
-
         }
 
 
         internal String EstablishQuery()
         {
+            string internalQuery;
             switch (query)
             {
                 case "checkimportspider":
                     databaseConn = GetConnMistralAnn();
                     return "Select * from twistuser.check_import Order by import_start desc";
+
+                case "dmmaster":
+                    databaseConn = GetConnGSProdAuto();
+                    internalQuery = "SELECT [InHomeWeek], [UAVC], [IHD], [OvID], [Complexity], [DTP], [FlagDoNotReleaseArt], [FlagJumpStart], [FuseRequestId], [GPON], [Hub], [JumpStartID], [PreferredArtist], [PrintVendor], [PrintWeek], [TouchType], [VendorQuoteNumber], [LastActivity], [ReceivedTime], [Status], [Active], [Interval] FROM [GSProductAutomation].[DirectMail].[DirectMail] " +
+                        "WHERE UAVC IS NOT NULL ";
+                    internalQuery += COMMON.IsEmptyOrNull(inhomeweek) ? "" : "AND [InHomeWeek] LIKE '%" + inhomeweek + "%' ";
+                    internalQuery += COMMON.IsEmptyOrNull(uavc) ? "" : "AND [UAVC] LIKE '%" + uavc + "%' ";
+                    internalQuery += COMMON.IsEmptyOrNull(ihd) ? "" : "AND [IHD] LIKE '%" + ihd + "%' ";
+                    internalQuery += COMMON.IsEmptyOrNull(ovid) ? "" : "AND [OvID] LIKE '%" + ovid + "%' ";
+                    return internalQuery;
+
+                case "dmgglog":
+                    databaseConn = GetConnGSProdAuto();
+                    internalQuery = "SELECT * FROM [GSProductAutomation].[DirectMail].[GraphicsGallery_Log] WHERE [FileName] IS NOT NULL ";
+                    internalQuery += COMMON.IsEmptyOrNull(fileName) ? "" : "AND [FileName] LIKE '%" + fileName + "%' ";
+                    internalQuery += COMMON.IsEmptyOrNull(inhomeweek) ? "" : "AND [IHW] LIKE '%" + inhomeweek + "%' ";
+                    return internalQuery;
+
+                case "dmprintvendor":
+                    databaseConn = GetConnGSProdAuto();
+                    internalQuery = "SELECT * FROM [GSProductAutomation].[DirectMail].[OutsidePrintVendor_Log] WHERE PageOrderName IS NOT NULL ";
+                    internalQuery += COMMON.IsEmptyOrNull(pageOrder) ? "" : "AND PageOrderName LIKE '%" + pageOrder + "%' ";
+                    internalQuery += COMMON.IsEmptyOrNull(inhomeweek) ? "" : "AND [IHW] LIKE '%" + inhomeweek + "%' ";
+                    return internalQuery;
 
                 case "fsimasthead":
                     databaseConn = GetConnPODPLA();
@@ -75,6 +102,13 @@ namespace SupportPortal.Models
                         "where i.Job_ID = '{0}' " +
                         "and Form_Region_ID + Form_Market_ID = '{1}' " +
                         "order by Form_Region_ID + Form_Market_ID", jobid, formregionid + marketid);
+
+                case "turnkeyprintjobprocessing":
+                    databaseConn = GetConnGSProdAuto();
+                    internalQuery = "SELECT * FROM [GSProductAutomation].[DirectMail].[APD_DMPrintJobProcessing] WHERE PageOrderName IS NOT NULL ";
+                    internalQuery += COMMON.IsEmptyOrNull(pageOrder) ? "" : "AND PageOrderName LIKE '%" + pageOrder + "%' ";
+                    internalQuery += COMMON.IsEmptyOrNull(jobid) ? "" : "AND JobID = " + jobid;
+                    return internalQuery;
 
                 case "turnkeylookup":
                     databaseConn = GetConnGSProdAuto();
@@ -116,7 +150,7 @@ namespace SupportPortal.Models
                     {
                         databaseConn = GetConnMistralAnnDev();
                         databaseConn.Open();
-                        string internalQuery = String.Format("Insert Into SpiderJDf Select JobID, JobName, SiteName, ShipDate, DueDate, " +
+                        internalQuery = String.Format("Insert Into SpiderJDf Select JobID, JobName, SiteName, ShipDate, DueDate, " +
                             "CustomerID, SectionID, SectionName, SectionFilterType, [PageCount], APRID, " +
                             "APRName, PageNum, CreativeID, OfferID, TrimHeight, TrimWidth, ImageHeight, " +
                             "ImageWidth, PageRotation, PaginationNum, PlatePositions, PressNumber, Comments, " +

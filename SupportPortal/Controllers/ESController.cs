@@ -1,33 +1,42 @@
 ﻿using SupportPortal.Infrastructure;
 using SupportPortal.Models;
+using SupportPortal.Models.ES;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 
 namespace SupportPortal.Controllers
 {
     public class ESController : Controller
     {
-        private static readonly ConfigSettings CONFIG = new ConfigSettings(); 
+        private static readonly ConfigSettings CONFIG = new ConfigSettings();
+        private static readonly Common COMMON = new Common();
         public ActionResult EsCompanion()
         {
             return View();
         }
-        // GET: ES
+
         [HttpPost]
-        public ActionResult CallDalimRestService(ESCompanionViewModel esViewModel)
+        public ActionResult UpdateJobMetadata(ESCompanionViewModel esViewModel)
         {
+            string url = CONFIG.GetDalimRestServiceUrl(esViewModel.CurrentEnvironmment);
+
+            url += String.Format("{0}/upsert/job/{1}/{2}",
+                esViewModel.Customer,
+                esViewModel.JobId,
+                CONFIG.ApplicationName);
+            
+            ViewBag.Response = SendGetRequest(url);
             return View("EsCompanion");
         }
 
         [HttpPost]
         public ActionResult UpdateSectionMetadata(ESCompanionViewModel esViewModel)
         {
-            if(!IsEmptyOrNull(esViewModel.PageOrder))
+            string url = CONFIG.GetDalimRestServiceUrl(esViewModel.CurrentEnvironmment);
+
+            if (!COMMON.IsEmptyOrNull(esViewModel.PageOrder))
             {
                 if (esViewModel.PageOrder.Contains("-"))
                 {
@@ -36,15 +45,85 @@ namespace SupportPortal.Controllers
                     esViewModel.IHD = Urlparams[1];
                 }
             }
-            
-            string urlParams = String.Format("{0}/update/section/{1}/{2}/{3}", 
+            url += String.Format("{0}/update/section/{1}/{2}/{3}", 
                 esViewModel.Customer, 
                 esViewModel.JobId, 
                 esViewModel.UAVC + "-" + esViewModel.IHD, 
                 CONFIG.ApplicationName);
+
+            ViewBag.Response = SendGetRequest(url);
+            return View("EsCompanion");
+        }
+
+        [HttpPost]
+        public ActionResult UpdateBulkSectionMetadata(ESCompanionViewModel esViewModel)
+        {
+            string url = CONFIG.GetDalimRestServiceUrl(esViewModel.CurrentEnvironmment);
+
+            url += String.Format("{0}/update/section/{1}/{2}",
+                esViewModel.Customer,
+                esViewModel.JobId,
+                CONFIG.ApplicationName);
+
+            ViewBag.Response = SendGetRequest(url);
+            return View("EsCompanion");
+        }
+
+        [HttpPost]
+        public ActionResult DMSectionToPrintReleaseRevision(ESCompanionViewModel esViewModel)
+        {
+            if (COMMON.IsEmptyOrNull(esViewModel.PageOrder))
+            {
+                esViewModel.PageOrder = esViewModel.UAVC + "-" + esViewModel.IHD;
+            }
+
+            ESRevision revision = new ESRevision(esViewModel);
+            revision.command = REVISIONCOMMAND.RTPTOUCHCOMPLETED.ToString();
+            revision.milestone = "RTP Touch Completed";
+            revision.metadatas.Add(new string[] { "Valassis MetaData", "DirectMailAdStatus", "Completed Waiting For Print Release" });
+
+            string url = CONFIG.GetDalimRestServiceUrl(esViewModel.CurrentEnvironmment);
+
+            url += String.Format("{0}/{1}",
+                "revision",
+                CONFIG.ApplicationName);
+
+            ViewBag.Response = SendPostRequest(url, revision);
+            return View("EsCompanion");
+        }
+
+        private dynamic SendPostRequest(string url, object obj)
+        {
             try
             {
-                string url = CONFIG.GetDalimRestServiceUrl(esViewModel.CurrentEnvironmment) + urlParams;
+                string data = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+                request.Method = "POST";
+                request.ContentType = "application/json";
+
+                using (StreamWriter stream = new StreamWriter(request.GetRequestStream()))
+                {
+                    stream.Write(data);
+                }
+
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (Stream stream = response.GetResponseStream())
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+        }
+
+        private dynamic SendGetRequest(string url)
+        {
+            try
+            {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
@@ -52,25 +131,13 @@ namespace SupportPortal.Controllers
                 using (Stream stream = response.GetResponseStream())
                 using (StreamReader reader = new StreamReader(stream))
                 {
-                    ViewBag.Response = reader.ReadToEnd();
+                    return reader.ReadToEnd();
                 }
-            } catch (Exception e)
-            {
-                ViewBag.Response = e.Message;
             }
-
-            return View("EsCompanion");
-        }
-
-        [HttpPost]
-        public ActionResult DMSectionToPrintRelease(ESCompanionViewModel esViewModel)
-        {
-            return View("EsCompanion");
-        }
-
-        public static bool IsEmptyOrNull(string s)
-        {
-            return (s == null || s == String.Empty) ? true : false;
+            catch (Exception e)
+            {
+                return e.Message;
+            }
         }
     }
 }

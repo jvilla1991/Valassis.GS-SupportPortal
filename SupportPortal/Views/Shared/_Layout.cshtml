@@ -132,8 +132,12 @@
                             <a href="javascript:void(0)">Queries &#8595</a>
                             <div class="dropdown-content">
                                 <a href="@Url.Action("checkimportspider", "Data")">Check Import Spider</a>
+                                <a href="@Url.Action("dmmaster", "Data")">DM - Master Table</a>
+                                <a href="@Url.Action("dmgglog", "Data")">DM - Graphics Gallery Log</a>
+                                <a href="@Url.Action("dmprintvendor", "Data")">DM - Outside Print Vendor Log</a>
                                 <a href="@Url.Action("fsimasthead", "Data")">FSI - Masthead</a>
-                                <a href="@Url.Action("turnkeylookup", "Data")">TurnkeyVDP - LookUp</a>
+                                <a href="@Url.Action("turnkeyprintjobprocessing", "Data")">Turnkey - PrintJobProcessing</a>
+                                <a href="@Url.Action("turnkeylookup", "Data")">TurnkeyVDP - LookUp(Deprecated)</a>
                                 <a href="@Url.Action("turnkeystatus", "Data")">TurnkeyVDP - Statuses</a>
                                 <a href="@Url.Action("wrappagecodewaiting", "Data")">Wrap - Check Page Build</a>
                                 <a href="@Url.Action("wrapdoubles", "Data")">Wrap - Check Doubles</a>
@@ -164,7 +168,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/SupportPortal">Support Portal</a>
+                    <a class="navbar-brand" href="@Url.Action("Index", "Support")">Support Portal</a>
                 </div>
                 <div class="navbar-collapse collapse" style="margin-left: 11%;">
                     <ul class="nav navbar-nav">

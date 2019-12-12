@@ -6,7 +6,7 @@
 
 
 <h2>DBParams</h2>
-@using (Html.BeginForm("QueryRead", "Support", FormMethod.Post))
+@using (Html.BeginForm("QueryRead", "Data", FormMethod.Post))
 {
 <table cellpadding="0" cellspacing="0">
     <tr>
@@ -15,8 +15,12 @@
         <td>
             @Html.DropDownListFor(m => m.query, new List<SelectListItem>
 { new SelectListItem{Text="Check Import Spider", Value="checkimportspider"},
+new SelectListItem{Text="DM - Master Table", Value="dmmaster"},
+new SelectListItem{Text="DM - Graphics Gallery Log", Value="dmgglog"},
+new SelectListItem{Text="DM - Outside Print Vendor Log", Value="dmprintvendor"},
 new SelectListItem{Text="FSI - Masthead", Value="fsimasthead"},
-new SelectListItem{Text="TurnKey - VDP Look Up", Value="turnkeylookup"},
+new SelectListItem{Text="TurnKey - Print Job Processing", Value="turnkeyprintjobprocessing"},
+new SelectListItem{Text="TurnKey - VDP Look Up(Deprecated)", Value="turnkeylookup"},
 new SelectListItem{Text="TurnKey - VDP Statuses", Value="turnkeystatus"},
 new SelectListItem{Text="Wrap - Check Page Codes waiting for Approval", Value="wrappagecodewaiting"},
 new SelectListItem{Text="Wrap - Check Doubles", Value="wrapdoubles"},
@@ -34,7 +38,8 @@ new SelectListItem{Text="Support.ProcessExecution", Value="processexec"},
         <th colspan="2" align="center">Enter Parameters</th>
     </tr>
     @if (ViewBag.Query.Equals("wrapdoubles") || ViewBag.Query.Equals("wrappagecodewaiting") ||
-        ViewBag.Query.Equals("wrappagecodedetails"))
+        ViewBag.Query.Equals("wrappagecodedetails") || ViewBag.Query.Equals("dmmaster") ||
+        ViewBag.Query.Equals("dmprintvendor") || ViewBag.Query.Equals("dmgglog"))
     {
         <tr>
             <td>In Home Week: </td>
@@ -45,7 +50,8 @@ new SelectListItem{Text="Support.ProcessExecution", Value="processexec"},
     }
     @if (ViewBag.Query.Equals("fsimasthead") || ViewBag.Query.Equals("spider") ||
         ViewBag.Query.Equals("livetodev") || ViewBag.Query.Equals("spiderimposition") ||
-        ViewBag.Query.Equals("turnkeylookup") || ViewBag.Query.Equals("newlivejob"))
+        ViewBag.Query.Equals("turnkeylookup") || ViewBag.Query.Equals("newlivejob") ||
+        ViewBag.Query.Equals("turnkeyprintjobprocessing"))
     {
         <tr>
             <td>Job ID: </td>
@@ -96,7 +102,16 @@ new SelectListItem{Text="Support.ProcessExecution", Value="processexec"},
             </td>
         </tr>
     }
-    @if (ViewBag.Query.Equals("turnkeylookup"))
+    @if (ViewBag.Query.Equals("turnkeyprintjobprocessing") || ViewBag.Query.Equals("dmprintvendor"))
+    {
+        <tr>
+            <td>Page Order: </td>
+            <td>
+                @Html.TextBoxFor(m => m.pageOrder)
+            </td>
+        </tr>
+    }
+    @if (ViewBag.Query.Equals("turnkeylookup") || ViewBag.Query.Equals("dmmaster"))
     {
         <tr>
             <td>UAVC: </td>
@@ -117,6 +132,31 @@ new SelectListItem{Text="Support.ProcessExecution", Value="processexec"},
             </td>
         </tr>
     }
+    @if (ViewBag.Query.Equals("dmmaster"))
+    {
+        <tr>
+            <td>In Home Date: </td>
+            <td>
+                @Html.TextBoxFor(m => m.ihd)
+            </td>
+        </tr>
+        <tr>
+            <td>Order Version ID: </td>
+            <td>
+                @Html.TextBoxFor(m => m.ovid)
+            </td>
+        </tr>
+    }
+    @if (ViewBag.Query.Equals("dmgglog"))
+    {
+        <tr>
+            <td>FileName: </td>
+            <td>
+                @Html.TextBoxFor(m => m.fileName)
+            </td>
+        </tr>
+    }
+
     <tr>
         <td></td>
         <td><input type="submit" value="Submit" /></td>

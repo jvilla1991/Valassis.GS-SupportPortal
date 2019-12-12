@@ -25,6 +25,7 @@ namespace SupportPortal.Models
         }
         private ServiceController sc;
         public string Name { get; set; }
+        public string Description { get; set; }
         public string NameParam { get; set; }
         public string Server { get; set; }
         public string Status { get; set; }
@@ -92,15 +93,19 @@ namespace SupportPortal.Models
             {
                 case "turnkey":
                     Name = ServiceName.Turnkey;
+                    Description = "(Deprecated) Service used to move Turnkey files to their Print Jobs";
                     break;
                 case "swautopagebuild":
                     Name = ServiceName.SWAutoPageBuild;
+                    Description = "(Deprecated) Service used to automate the life cycle of incoming Wrap Files from AX";
                     break;
                 case "cfumanager":
                     Name = ServiceName.CFUManager;
+                    Description = "Primary Service responsible for routing and auditing messages and tasks within the CFU MicroService Architecture";
                     break;
                 case "mtwatcher":
                     Name = ServiceName.MTWatcher;
+                    Description = "Central File Upload Service responsible for reading incoming data from Mass Transit";
                     break;
             }
         }
