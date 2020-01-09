@@ -200,6 +200,7 @@
     <Content Include="Content\Support Portal Updates.docx" />
     <None Include="Properties\PublishProfiles\Dev Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Dev.pubxml" />
+    <None Include="Properties\PublishProfiles\Prod Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Prod.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -231,6 +232,7 @@
     <Content Include="Views\Data\DBResults.cshtml" />
     <Content Include="Views\Services\Services.cshtml" />
     <Content Include="Views\ES\EsCompanion.cshtml" />
+    <Content Include="Views\ES\_DMData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

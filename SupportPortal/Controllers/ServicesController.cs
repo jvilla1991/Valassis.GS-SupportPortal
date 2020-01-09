@@ -1,8 +1,10 @@
 ﻿using Microsoft.Win32.TaskScheduler;
+using SimpleImpersonation;
 using SupportPortal.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceProcess;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
@@ -14,48 +16,35 @@ namespace SupportPortal.Controllers
     {
         #region Services
         // The "id" field is looking for an int to be returned from the view. either "1" for start or "0" for stop
-        [Route("Services/service-{serviceNameParam}/{id?}")]
+        [Route("Services/{serviceNameParam}-service/{id?}")]
         public ActionResult Services(string serviceNameParam, int? id)
         {
             ServiceViewModel service = new ServiceViewModel(serviceNameParam);
-            try
+
+            var credentials = new UserCredentials(service.Username, service.Password);
+            Impersonation.RunAsUser(credentials, SimpleImpersonation.LogonType.Interactive, () =>
             {
-                try
-                {
-                    service.Initialize();
-                    service.GetStatus();
-                }
-                catch (Exception e)
-                {
-                    service.Exception = true;
-                    service.Status = e.Message;
-                }
+                ServiceControllerPermission scp = new ServiceControllerPermission(ServiceControllerPermissionAccess.Control, service.Server, service.Name);
+                scp.Assert();
 
-                // This is skipped when the web page first renders. It will be up the user to determine the procedure.
-                if (id == 1)
+                ServiceController sc = new ServiceController(service.Name, service.Server);
+                TimeSpan timeout = new TimeSpan(0, 0, 30);
+                switch (id)
                 {
-                    ViewBag.Result = service.Start();
-                    new DAO().AuditProcess("Services", serviceNameParam, "Start");
-                    Thread.Sleep(5000);
-                    service.GetStatus();
-
+                    case 0:
+                        sc.Stop();
+                        sc.WaitForStatus(ServiceControllerStatus.Stopped, timeout);
+                        break;
+                    case 1:
+                        sc.Start();
+                        sc.WaitForStatus(ServiceControllerStatus.Running, timeout);
+                        break;
+                    default:
+                        service.Status = sc.Status.ToString();
+                        break;
                 }
-                else if (id == 0)
-                {
-                    ViewBag.Result = service.Stop();
-                    new DAO().AuditProcess("Services", serviceNameParam, "Stop");
-                    Thread.Sleep(5000);
-                    service.GetStatus();
-
-                }
-                return View(service);
-            }
-            catch (Exception e)
-            {
-                e.ToString();
-            }
-            return View();
-
+            });
+            return View(service);
         }
         #endregion
 

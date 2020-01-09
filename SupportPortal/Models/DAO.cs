@@ -29,8 +29,6 @@ namespace SupportPortal.Models
         public string pageOrder { get; set; }
         public string ihd { get; set; }
         public string ovid { get; set; }
-        public string fileName { get; set; }
-        //public List<string> pagecodes { get; set; }
         public string pagecodes { get; set; }
 
         internal DataTable GetData()
@@ -83,14 +81,14 @@ namespace SupportPortal.Models
                 case "dmgglog":
                     databaseConn = GetConnGSProdAuto();
                     internalQuery = "SELECT * FROM [GSProductAutomation].[DirectMail].[GraphicsGallery_Log] WHERE [FileName] IS NOT NULL ";
-                    internalQuery += COMMON.IsEmptyOrNull(fileName) ? "" : "AND [FileName] LIKE '%" + fileName + "%' ";
+                    internalQuery += COMMON.IsEmptyOrNull(uavc) ? "" : "AND [FileName] LIKE '%" + uavc + "%' ";
                     internalQuery += COMMON.IsEmptyOrNull(inhomeweek) ? "" : "AND [IHW] LIKE '%" + inhomeweek + "%' ";
                     return internalQuery;
 
                 case "dmprintvendor":
                     databaseConn = GetConnGSProdAuto();
                     internalQuery = "SELECT * FROM [GSProductAutomation].[DirectMail].[OutsidePrintVendor_Log] WHERE PageOrderName IS NOT NULL ";
-                    internalQuery += COMMON.IsEmptyOrNull(pageOrder) ? "" : "AND PageOrderName LIKE '%" + pageOrder + "%' ";
+                    internalQuery += COMMON.IsEmptyOrNull(uavc) ? "" : "AND PageOrderName LIKE '%" + uavc + "%' ";
                     internalQuery += COMMON.IsEmptyOrNull(inhomeweek) ? "" : "AND [IHW] LIKE '%" + inhomeweek + "%' ";
                     return internalQuery;
 

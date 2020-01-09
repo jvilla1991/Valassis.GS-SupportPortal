@@ -23,6 +23,7 @@
         <div class="control-group">
             <div class="controls">
                 <label class="dropdown">
+                    <span id="environment-required" class="control-label" style="font-weight: bold; color: red; font-size: 150%;" hidden>* </span>
                     @Html.DropDownListFor(m => m.CurrentEnvironmment,
                     new SelectList(Enum.GetValues(typeof(EsEnvironment))),
                     "Select Environment",
@@ -39,7 +40,7 @@
             <li class="@wrapTab"><a href="#wrap" data-toggle="tab">Wrap</a></li>
             <li class="@directMailTab"><a href="#directmail" data-toggle="tab">Direct Mail</a></li>
         </ul>
-        @*@Html.HiddenFor(m => m.Customer, new { id = "hidden-customer" }) Was Trying to use JS to dynamically populate this field as the User click through tabs. Was working, then stopped.*@
+        @*@Html.HiddenFor(m => m.Customer, new { id = "hidden-customer" })*@ @*Was Trying to use JS to dynamically populate this field as the User click through tabs. Was working, then stopped.*@
     </div>
 </div>
 <div class="row-fluid">
@@ -47,202 +48,209 @@
         <div id="fsi" class="@fsiPane">
             <div class="row-fluid">
                 @Html.DropDownList("wrapSelectDropDown", new List<SelectListItem>
-{ new SelectListItem{Text="Update Job Metadata", Value="fsi-job-update"},
-               new SelectListItem{Text="Update Section Metadata", Value="fsi-section-update"}},
+{ new SelectListItem{Text="Update/Create Job Metadata", Value="fsi-job-update"},
+  new SelectListItem{Text="Update/Create Section Metadata", Value="fsi-section-update"}},
 "Please Select",
 new { @class = "action-dropdown" })
                 <div class="span11 offset1">
-                    @using (Html.BeginForm("UpdateJobMetadata", "ES", FormMethod.Post, new { id = "fsi-job-update", @class = "submission-form" }))
-                    {
+                    <form class="form" name="UpdateJobMetadata" id="fsi-job-update">
                         @Html.HiddenFor(m => m.Customer, new { id = "hidden-customer", @Value = "fsi" })
-                        <h4>Update Job Metadata</h4>
+                        @Html.HiddenFor(m => m.CurrentEnvironmment, new { @class = "hidden-environment" })
+                        <h4>Attempts to Update FSI Job Metadata in ES (Creates Placeholder if it does not exist and there is available data)</h4>
                         <table>
                             <tr>
-                                <td>Job ID: </td>
+                                <td>@Html.Label("Job ID: ")</td>
                                 <td>@Html.TextBoxFor(m => m.JobId)</td>
                             </tr>
                             <tr>
-                                <td>Page Order: </td>
-                                <td>@Html.TextBoxFor(m => m.PageOrder)</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><button type="submit" class="btn btn-primary" disabled>Submit</button></td>
+                                <td colspan="2"><button type="submit" class="btn btn-primary">Submit</button></td>
                             </tr>
                         </table>
-                    }
+                    </form>
                 </div>
                 <div class="span11 offset1">
-                    @using (Html.BeginForm("SectionToPrintRelease", "ES", FormMethod.Post, new { id = "fsi-section-update", @class = "submission-form" }))
-                    {
+                    <form class="form" name="UpdateSectionMetadata" id="fsi-section-update">
                         @Html.HiddenFor(m => m.Customer, new { id = "hidden-customer", @Value = "fsi" })
-                        <h4>Release to Print Job</h4>
+                        @Html.HiddenFor(m => m.CurrentEnvironmment, new { @class = "hidden-environment" })
+                        <h4>Attempts to Update FSI Section Metadata in ES (Creates Placeholder if it does not exist and there is available data)</h4>
                         <table>
                             <tr>
-                                <td>In Home Week: </td>
+                                <td>@Html.Label("Job ID: ")</td>
                                 <td>@Html.TextBoxFor(m => m.JobId)</td>
                             </tr>
                             <tr>
-                                <td>Job ID: </td>
-                                <td>@Html.TextBoxFor(m => m.PageOrder)</td>
+                                <td>@Html.Label("PageOrder: ")</td>
+                                <td>@Html.TextBoxFor(m => m.PageOrder) </td>
+                                <td>(Leave Blank For Bulk Update)</td>
                             </tr>
                             <tr>
-                                <td>Page Code: </td>
-                                <td>@Html.TextBoxFor(m => m.IHD)</td>
+                                <td>
+                                    @Html.RadioButtonFor(m => m.FSIUpdateTarget, FSIUpdateTarget.Section)
+                                    @Html.Label("Section")
+                                </td>
                             </tr>
                             <tr>
-                                <td colspan="2"><button type="submit" class="btn btn-primary" disabled>Submit</button></td>
+                                <td>
+                                    @Html.RadioButtonFor(m => m.FSIUpdateTarget, FSIUpdateTarget.Form)
+                                    @Html.Label("Form")
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.RadioButtonFor(m => m.FSIUpdateTarget, FSIUpdateTarget.Ad)
+                                    @Html.Label("Ad")
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><button type="submit" class="btn btn-primary">Submit</button></td>
                             </tr>
                         </table>
-                    }
+                    </form>
                 </div>
             </div>
         </div>
         <div id="wrap" class="@wrapPane">
             <div class="row-fluid">
                 @Html.DropDownList("wrapSelectDropDown", new List<SelectListItem>
-{ new SelectListItem{Text="Update Job Metadata", Value="wrap-job-update"},
-new SelectListItem{Text="Update Section Metadata", Value="wrap-section-update"},
+{ new SelectListItem{Text="Update/Create Job Metadata", Value="wrap-job-update"},
+new SelectListItem{Text="Update/Create Section Metadata", Value="wrap-section-update"},
 new SelectListItem{Text="Release to Print Job", Value="wrap-section-print-release"}},
 "Please Select",
 new { @class = "action-dropdown" })
                 <div class="span11 offset1">
-                    @using (Html.BeginForm("UpdateJobMetadata", "ES", FormMethod.Post, new { id = "wrap-job-update", @class = "submission-form" }))
-                    {
+                    <form class="form" name="UpdateJobMetadata" id="wrap-job-update">
                         @Html.HiddenFor(m => m.Customer, new { id = "hidden-customer", @Value = "wrap" })
-                        <h4>Update Section Metadata</h4>
+                        @Html.HiddenFor(m => m.CurrentEnvironmment, new { @class = "hidden-environment" })
+                        <h4>Attempts to Update Wrap Job Metadata in ES (Creates Placeholder if it does not exist and there is available data)</h4>
                         <table>
                             <tr>
-                                <td>Job ID: </td>
+                                <td>@Html.Label("Job ID: ")</td>
                                 <td>@Html.TextBoxFor(m => m.JobId)</td>
                             </tr>
                             <tr>
-                                <td colspan="2"><button type="submit" class="btn btn-primary" disabled>Submit</button></td>
+                                <td colspan="2"><button type="submit" class="btn btn-primary">Submit</button></td>
                             </tr>
                         </table>
-                    }
+                    </form>
                 </div>
                 <div class="span11 offset1">
-                    @using (Html.BeginForm("UpdateSectionMetadata", "ES", FormMethod.Post, new { id = "wrap-section-update", @class = "submission-form" }))
-                    {
+                    <form class="form" name="UpdateSectionMetadata" id="wrap-section-update">
                         @Html.HiddenFor(m => m.Customer, new { id = "hidden-customer", @Value = "wrap" })
-                        <h4>Update Section Metadata</h4>
+                        @Html.HiddenFor(m => m.CurrentEnvironmment, new { @class = "hidden-environment" })
+                        <h4>Attempts to Update Wrap Page Order Metadata in ES (Creates Placeholder if it does not exist and there is available data)</h4>
                         <table>
                             <tr>
-                                <td>Job ID: </td>
+                                <td>@Html.Label("Job ID: ")</td>
                                 <td>@Html.TextBoxFor(m => m.JobId)</td>
                             </tr>
                             <tr>
-                                <td>Page Order: </td>
-                                <td>@Html.TextBoxFor(m => m.PageOrder)</td>
+                                <td>@Html.Label("PageOrder: ")</td>
+                                <td>@Html.TextBoxFor(m => m.PageOrder) </td>
+                                <td>(Leave Blank For Bulk Update)</td>
                             </tr>
                             <tr>
-                                <td colspan="2"><button type="submit" class="btn btn-primary" disabled>Submit</button></td>
+                                <td colspan="2"><button type="submit" class="btn btn-primary">Submit</button></td>
                             </tr>
                         </table>
-                    }
+                    </form>
                 </div>
                 <div class="span11 offset1">
-                    @using (Html.BeginForm("SectionToPrintJob", "ES", FormMethod.Post, new { id = "wrap-section-print-release", @class = "submission-form" }))
-                    {
+                    <form class="form" name="ReleaseToPrintJob" id="wrap-section-print-release">
                         @Html.HiddenFor(m => m.Customer, new { id = "hidden-customer", @Value = "wrap" })
-                        <h4>Release to Print Job</h4>
+                        @Html.HiddenFor(m => m.CurrentEnvironmment, new { @class = "hidden-environment" })
                         <table>
                             <tr>
                                 <td>In Home Week: </td>
+                                <td>@Html.TextBoxFor(m => m.InHomeWeek)</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.Label("Job ID: ")</td>
                                 <td>@Html.TextBoxFor(m => m.JobId)</td>
                             </tr>
                             <tr>
-                                <td>Job ID: </td>
+                                <td>@Html.Label("PageOrder: ")</td>
                                 <td>@Html.TextBoxFor(m => m.PageOrder)</td>
                             </tr>
                             <tr>
-                                <td>Page Code: </td>
-                                <td>@Html.TextBoxFor(m => m.IHD)</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><button type="submit" class="btn btn-primary" disabled>Submit</button></td>
+                                <td colspan="2"><button type="submit" class="btn btn-primary">Submit</button></td>
                             </tr>
                         </table>
-                    }
+                    </form>
                 </div>
             </div>
         </div>
         <div id="directmail" class="@directMailPane">
             <div class="row-fluid">
                 @Html.DropDownList("dmSelectDropDown", new List<SelectListItem>
-{ new SelectListItem{Text="Update Section Metadata", Value="dm-section-update"},
-new SelectListItem{Text="Move to \"Waiting for Print Release\"", Value="dm-section-move-print"}},
+{ new SelectListItem{Text="Update/Create Section Metadata", Value="dm-section-update"},
+new SelectListItem{Text="Move to \"Waiting for Print Release\"", Value="dm-section-revision-print-release"},
+new SelectListItem{Text="Move Print Job", Value="dm-section-move-print-job"}
+           },
 "Please Select",
 new { @class = "action-dropdown" })
                 <div class="span11 offset1">
-                    @using (Html.BeginForm("UpdateSectionMetadata", "ES", FormMethod.Post, new { id = "dm-section-update", @class = "submission-form" }))
-                    {
+                    <form class="form" name="UpdateSectionMetadata" id="dm-section-update">
                         @Html.HiddenFor(m => m.Customer, new { id = "hidden-customer", @Value = "dm" })
-                        <h4>Update Section Metadata</h4>
+                        @Html.HiddenFor(m => m.CurrentEnvironmment, new { @class = "hidden-environment" })
+                        <h4>Attempts to Update Direct Mail Page Order Metadata in ES (Creates Placeholder if it does not exist and there is available data)</h4>
                         <table>
                             <tr>
-                                <td>In Home Week: </td>
+                                <td>@Html.Label("In Home Week: ")</td>
                                 <td>@Html.TextBoxFor(m => m.JobId)</td>
                             </tr>
                             <tr>
-                                <td>UAVC: </td>
-                                <td>@Html.TextBoxFor(m => m.UAVC)</td>
-                            </tr>
-                            <tr>
-                                <td>In Home Date: </td>
-                                <td>@Html.TextBoxFor(m => m.IHD)</td>
-                            </tr>
-                            <tr>
-                                <td>--or--</td>
-                            </tr>
-                            <tr>
-                                <td>Page Order: </td>
+                                <td>@Html.Label("UAVC-IHD: ")</td>
                                 <td>@Html.TextBoxFor(m => m.PageOrder)</td>
                             </tr>
                             <tr>
-                                <td colspan="2"><button type="submit" class="btn btn-primary" disabled>Submit</button></td>
+                                <td colspan="2"><button type="submit" class="btn btn-primary" >Submit</button></td>
                             </tr>
                         </table>
-                    }
+                        @*}*@
+                    </form>
                 </div>
                 <div class="span11 offset1">
-                    @using (Html.BeginForm("DMSectionToPrintReleaseRevision", "ES", FormMethod.Post, new { id = "dm-section-move-print", @class = "submission-form" }))
-                    {
-                        @Html.HiddenFor(m => m.Customer, new { id = "hidden-customer", @Value = "dm" })
-                        <h4>Move Section to "Waiting for Print Release"</h4>
+                    <form class="form" name="DMSectionToPrintReleaseRevision" id="dm-section-revision-print-release">
+                        @Html.HiddenFor(m => m.Customer, new { @class = "hidden-customer" })
+                        @Html.HiddenFor(m => m.CurrentEnvironmment, new { @class = "hidden-environment" })
+                        <h4>Validates to see if Page Order is in "Proof Out For Approval" State(Check 'Force' to bypass validation)</h4>
+                        <h4>Will set Milestone to "RTP Touch Completed" and update DirectMailAdStatus metadata to "Completed Waiting For Print Release"</h4>
                         <table>
                             <tr>
-                                <td>In Home Week: </td>
+                                <td>@Html.Label("In Home Week: ")</td>
                                 <td>@Html.TextBoxFor(m => m.JobId)</td>
                             </tr>
                             <tr>
-                                <td>UAVC: </td>
-                                <td>@Html.TextBoxFor(m => m.UAVC)</td>
+                                <td>@Html.Label("UAVC-IHD: ")</td>
+                                <td>@Html.TextBoxFor(m => m.PageOrder) </td>
                             </tr>
                             <tr>
-                                <td>In Home Date: </td>
-                                <td>@Html.TextBoxFor(m => m.IHD)</td>
+                                <td>@Html.Label("Force? ")</td>
+                                <td>@Html.CheckBoxFor(m => m.Force) (Bypass checking for Metadata)  </td>
                             </tr>
                             <tr>
-                                <td>--or--</td>
-                            </tr>
-                            <tr>
-                                <td>Page Order: </td>
-                                <td>@Html.TextBoxFor(m => m.PageOrder)</td>
-                            </tr>
-                            <tr>
-                                <td>Force? </td>
-                                <td>@Html.CheckBoxFor(m => m.Force)	(Will bypass the Metadata Check)</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><button type="submit" class="btn btn-primary" disabled>Submit</button></td>
+                                <td colspan="2"><button type="submit" class="btn btn-primary">Submit</button></td>
                             </tr>
                         </table>
-                    }
+                    </form>
+                </div>
+                <div class="span11 offset1">
+                    <form class="form" name="ReleaseToPrintJob" id="dm-section-move-print-job">
+                        @Html.HiddenFor(m => m.Customer, new { id = "hidden-customer", @Value = "dm" })
+                        @Html.HiddenFor(m => m.CurrentEnvironmment, new { @class = "hidden-environment" })
+                        <h4>Checks and Releases Direct Mail Files to APD Print Jobs</h4>
+                        <table>
+                            <tr>
+                                <td colspan="2"><button type="submit" class="btn btn-primary">Kick</button></td>
+                            </tr>
+                        </table>
+                        @*}*@
+                    </form>
                 </div>
             </div>
         </div>
         @ViewBag.Response
+        <div style="color:purple" id="output"></div>
     </div>
 </div>
 
@@ -250,44 +258,69 @@ new { @class = "action-dropdown" })
 {
     <script>
         $(document).ready(function () {
-            $('.submission-form').attr('hidden', true);
+            $('form').attr('hidden', true);
 
             $('.action-dropdown').change(function () {
-                $('.submission-form').attr('hidden', true);
+                $('.form').attr('hidden', true);
                 $('#' + this.value).removeAttr("hidden");
-                this.value = '-';
             });
 
             $('#environment-select').change(function () {
                 var environment = this.value;
                 if (environment == "Production") {
                     document.getElementsByTagName("body")[0].style = 'background-color: #bbd1ae';
-                    $('.btn').removeAttr('disabled');
+                    $('.hidden-environment').val('Production')
                 }
                 else if (environment == "Development") {
                     document.getElementsByTagName("body")[0].style = 'background-color: #c2909c';
-                    $('.btn').removeAttr('disabled');
+                    $('.hidden-environment').val('Development')
                 }
                 else {
-                    $('.btn').attr('disabled', true);
                     document.getElementsByTagName("body")[0].style = 'background-color: #ffffff';
                 }
             });
 
-            // Was Trying to dynamically populate a Hidden field with the Product Value as the User clicked through tabs. Was working, now it's not
+            // Was Trying to dynamically populate a single Hidden field with the Product Value as the User clicked through tabs. Was working, now it's not
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 var target = $(e.target).attr("href");
                 switch (target) {
                     case '#fsi':
-                        $('#hidden-customer').attr('Value', 'fsi');
+                        $('.hidden-customer').val('fsi');
                         break;
                     case '#wrap':
-                        $('#hidden-customer').val('wrap');
+                        $('.hidden-customer').val('wrap');
                         break;
                     case '#directmail':
-                        $('#hidden-customer').val('dm');
+                        $('.hidden-customer').val('dm');
                         break;
                 }
+            });
+
+            $('.form').submit(function () {
+                var environmentValue = $('#environment-select option:selected').text();
+                if (!(environmentValue === 'Production' || environmentValue === 'Development')) {
+                    $('#environment-required').removeAttr("hidden");
+                    alert('Please Select an Environment');
+                    return false;
+                }
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: this.name,
+                    data: $(this).serialize(),
+                    dataType: "json",
+                    success: function (msg) {
+                        var output = $('#output');
+                        output.empty();
+                        console.log(msg);
+                        var result = JSON.stringify(msg);
+                        $('#output').append(document.createTextNode(result));
+                    },
+                    error: function () {
+                        return "error";
+                    }
+                });
+                return false;
             });
 
 

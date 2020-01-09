@@ -14,105 +14,77 @@ namespace SupportPortal.Models
             public static string CFUManager { get { return ("Valassis CFU.CentralFileManager"); } }
             public static string MTWatcher { get { return ("Valassis CFU.MassTransitWatcher"); } }
             public static string Turnkey { get { return ("Valassis.Turnkey"); } }
+            public static string MassTransit { get { return ("MassTransit"); } }
             public static string SWAutoPageBuild { get { return ("Valassis.SWAutoPageBuild"); } }
+            public static string Tomcat9 { get { return ("Tomcat9"); } }
         }
 
         public ServiceViewModel(string serviceNameParam)
         {
             this.NameParam = serviceNameParam;
-            SetName(serviceNameParam);
-            Server = "valvcsgsw001vm";
+            Initialize(serviceNameParam);
         }
         private ServiceController sc;
         public string Name { get; set; }
         public string Description { get; set; }
         public string NameParam { get; set; }
         public string Server { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
         public string Status { get; set; }
         public bool Exception { get; internal set; }
 
-        // initializes an object that uses the service name and server to connect to a server
-        internal void Initialize()
-        {
-            sc = new ServiceController(Name, Server);
-        }
-
-        // Starts a service
-        public string Start()
-        {
-            try
-            {
-                sc.Start();
-            }
-            catch (InvalidOperationException ex)
-            {
-                if (ex.InnerException.ToString().Contains("already running"))
-                {
-                    return "Service already running";
-                }
-                else
-                {
-                    return "Could not start: " + ex.Message;
-                }
-            }
-            return "Service started successfully";
-        }
-
-        // Stops a service
-        public string Stop()
-        {
-            try
-            {
-                sc.Stop();
-            }
-            catch (InvalidOperationException ex)
-            {
-                if (ex.InnerException.ToString().Contains("already stopped"))
-                {
-                    return "Service not currently running";
-                }
-                else
-                {
-                    return "Could not stop: " + ex.Message;
-                }
-            }
-            return "Service stopped successfully";
-        }
-
-        // Gets status of targeted service
-        internal void GetStatus()
-        {
-            sc.Refresh();
-            this.Status = sc.Status.ToString();
-        }
-
-        // Takes a service name param from a url and returns the name of the service on the server
-        internal void SetName(string serviceNameParam)
+        // Takes a service name param from a url and returns the name, description, and credentials of the service on the server
+        internal void Initialize(string serviceNameParam)
         {
             switch (serviceNameParam)
             {
                 case "turnkey":
                     Name = ServiceName.Turnkey;
-                    Description = "(Deprecated) Service used to move Turnkey files to their Print Jobs";
+                    Description = "(Obsolete) Service used to move Turnkey files to their Print Jobs";
+                    Server = "valvcsgsw001vm";
                     break;
                 case "swautopagebuild":
                     Name = ServiceName.SWAutoPageBuild;
-                    Description = "(Deprecated) Service used to automate the life cycle of incoming Wrap Files from AX";
+                    Description = "(Obsolete) Service used to automate the life cycle of incoming Wrap Files from AX";
                     break;
                 case "cfumanager":
                     Name = ServiceName.CFUManager;
                     Description = "Primary Service responsible for routing and auditing messages and tasks within the CFU MicroService Architecture";
+                    Username = @"VAL\gswebfilecentral";
+                    Password = @"GsWebFC2013!";
+                    Server = "valvcsgsw001vm";
                     break;
                 case "mtwatcher":
                     Name = ServiceName.MTWatcher;
                     Description = "Central File Upload Service responsible for reading incoming data from Mass Transit";
+                    Username = @"VAL\gswebfilecentral";
+                    Password = @"GsWebFC2013!";
+                    Server = "valvcsgsw001vm";
+                    break;
+                case "mt":
+                    Name = ServiceName.MassTransit;
+                    Description = "MassTransit Managed File Transfer Service by Acronis, Inc.";
+                    Username = @"VAL\masstransit";
+                    Password = @"MassTran2006*!";
+                    Server = "valvcsmt003ph";
+                    break;
+                case "java-prod":
+                    Name = ServiceName.Tomcat9;
+                    Description = "Apache Tomcat 9.0.0.M17 Server - http://tomcat.apache.org/";
+                    Username = @"val\GSwebHHSAPI";
+                    Password = @"GsWebHHS2018!";
+                    Server = "valvcsgsw002vm";
+                    break;
+                case "java-dev":
+                    Name = ServiceName.Tomcat9;
+                    Description = "Apache Tomcat 9.0.0.M17 Server - http://tomcat.apache.org/";
+                    Username = @"val\GSwebHHSAPI";
+                    Password = @"GsWebHHS2018!";
+                    Server = "vallomgsw003vm";
                     break;
             }
         }
 
-        internal dynamic GetName()
-        {
-            return Name;
-        }
     }
 }

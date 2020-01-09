@@ -49,22 +49,15 @@ namespace SupportPortal.Controllers
             return View("IframeTemplate");
         }
 
-        public ActionResult EsCompanion()
-        {
-            return View();
-        }
-
         public ActionResult GSWebPortal()
         {
             ViewBag.URL = "http://gsapphub/WebPortal/Default.aspx";
-
             return View("IframeTemplate");
         }
 
         public ActionResult KnowledgeBase()
         {
             ViewBag.URL = "http://valvcskb001vm/helpconsole6/";
-
             return View("IframeTemplate");
         }
 
@@ -99,17 +92,20 @@ namespace SupportPortal.Controllers
         public ActionResult DalimAPIDoc()
         {
             ViewBag.URL = "https://confluence.dalim.com/login.action?os_destination=%2Fdisplay%2FESAPI&permissionViolation=true";
-
             return View("IframeTemplate");
-
         }
 
         public ActionResult WebEIGSystem()
         {
             ViewBag.URL = "http://gsapphub/webeigsystem/default.aspx";
+            return View("IframeTemplate");
+        }
+
+        public ActionResult BlanSys()
+        {
+            ViewBag.URL = "https://blanchardsystems.zendesk.com/hc/en-us/restricted?return_to=https://blanchardsystems.zendesk.com/hc/en-us";
 
             return View("IframeTemplate");
-
         }
         #endregion
 

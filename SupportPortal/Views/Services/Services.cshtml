@@ -5,13 +5,14 @@
 }
     <center>
         <h2>@Model.Name</h2>
-        <h3>@Model.Status</h3>
         <h4>@Model.Description</h4>
+
+        <h3>@Model.Status</h3>
 
         @if (!Model.Exception)
         {
-            <input type="button" value="Start" onclick="location.href='@Url.Action(Model.NameParam + "/1", ViewBag.Title)'" />
-            <input type="button" value="Stop" onclick="location.href='@Url.Action(Model.NameParam + "/0", ViewBag.Title)'" />
+            <input type="button" value="Start" onclick="location.href='@Url.Action(Model.NameParam + "-service/1", ViewBag.Title)'" />
+            <input type="button" value="Stop" onclick="location.href='@Url.Action(Model.NameParam + "-service/0", ViewBag.Title)'" />
         }
 
         <h3>@ViewBag.Result</h3>

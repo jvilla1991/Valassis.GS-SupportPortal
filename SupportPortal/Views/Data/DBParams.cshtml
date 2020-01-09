@@ -102,7 +102,7 @@ new SelectListItem{Text="Support.ProcessExecution", Value="processexec"},
             </td>
         </tr>
     }
-    @if (ViewBag.Query.Equals("turnkeyprintjobprocessing") || ViewBag.Query.Equals("dmprintvendor"))
+    @if (ViewBag.Query.Equals("turnkeyprintjobprocessing"))
     {
         <tr>
             <td>Page Order: </td>
@@ -111,7 +111,7 @@ new SelectListItem{Text="Support.ProcessExecution", Value="processexec"},
             </td>
         </tr>
     }
-    @if (ViewBag.Query.Equals("turnkeylookup") || ViewBag.Query.Equals("dmmaster"))
+    @if (ViewBag.Query.Equals("turnkeylookup") || ViewBag.Query.Equals("dmmaster") || ViewBag.Query.Equals("dmgglog") || ViewBag.Query.Equals("dmprintvendor"))
     {
         <tr>
             <td>UAVC: </td>
@@ -144,15 +144,6 @@ new SelectListItem{Text="Support.ProcessExecution", Value="processexec"},
             <td>Order Version ID: </td>
             <td>
                 @Html.TextBoxFor(m => m.ovid)
-            </td>
-        </tr>
-    }
-    @if (ViewBag.Query.Equals("dmgglog"))
-    {
-        <tr>
-            <td>FileName: </td>
-            <td>
-                @Html.TextBoxFor(m => m.fileName)
             </td>
         </tr>
     }
