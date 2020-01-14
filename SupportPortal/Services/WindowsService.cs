@@ -41,12 +41,15 @@ namespace SupportPortal.Models
             {
                 case "turnkey":
                     Name = ServiceName.Turnkey;
-                    Description = "(Obsolete) Service used to move Turnkey files to their Print Jobs";
+                    Description = "Service used to move Turnkey files to their Print Jobs";
+                    Username = @"VAL\gsAppTurnkey";
+                    Password = @"GsAppTky2012!";
                     Server = "valvcsgsw001vm";
                     break;
                 case "swautopagebuild":
                     Name = ServiceName.SWAutoPageBuild;
                     Description = "(Obsolete) Service used to automate the life cycle of incoming Wrap Files from AX";
+                    Server = "valvcsgsw001vm";
                     break;
                 case "cfumanager":
                     Name = ServiceName.CFUManager;
@@ -71,14 +74,14 @@ namespace SupportPortal.Models
                     break;
                 case "java-prod":
                     Name = ServiceName.Tomcat9;
-                    Description = "Apache Tomcat 9.0.0.M17 Server - http://tomcat.apache.org/";
+                    Description = "Apache Tomcat 9.0.0.M17 Server - http://valvcsgsw002vm:8090/";
                     Username = @"val\GSwebHHSAPI";
                     Password = @"GsWebHHS2018!";
                     Server = "valvcsgsw002vm";
                     break;
                 case "java-dev":
                     Name = ServiceName.Tomcat9;
-                    Description = "Apache Tomcat 9.0.0.M17 Server - http://tomcat.apache.org/";
+                    Description = "Apache Tomcat 9.0.0.M17 Server - http://vallomgsw003vm:8090/";
                     Username = @"val\GSwebHHSAPI";
                     Password = @"GsWebHHS2018!";
                     Server = "vallomgsw003vm";

@@ -15,7 +15,8 @@
         <td>
             @Html.DropDownListFor(m => m.query, new List<SelectListItem>
 { new SelectListItem{Text="Check Import Spider", Value="checkimportspider"},
-new SelectListItem{Text="DM - Master Table", Value="dmmaster"},
+new SelectListItem{Text="DM - PE Table", Value="dmmaster"},
+new SelectListItem{Text="DM - APD_PrintJobProcessing", Value="apdprintjob"},
 new SelectListItem{Text="DM - Graphics Gallery Log", Value="dmgglog"},
 new SelectListItem{Text="DM - Outside Print Vendor Log", Value="dmprintvendor"},
 new SelectListItem{Text="FSI - Masthead", Value="fsimasthead"},
@@ -51,7 +52,7 @@ new SelectListItem{Text="Support.ProcessExecution", Value="processexec"},
     @if (ViewBag.Query.Equals("fsimasthead") || ViewBag.Query.Equals("spider") ||
         ViewBag.Query.Equals("livetodev") || ViewBag.Query.Equals("spiderimposition") ||
         ViewBag.Query.Equals("turnkeylookup") || ViewBag.Query.Equals("newlivejob") ||
-        ViewBag.Query.Equals("turnkeyprintjobprocessing"))
+        ViewBag.Query.Equals("turnkeyprintjobprocessing")  || ViewBag.Query.Equals("apdprintjob"))
     {
         <tr>
             <td>Job ID: </td>
@@ -111,7 +112,7 @@ new SelectListItem{Text="Support.ProcessExecution", Value="processexec"},
             </td>
         </tr>
     }
-    @if (ViewBag.Query.Equals("turnkeylookup") || ViewBag.Query.Equals("dmmaster") || ViewBag.Query.Equals("dmgglog") || ViewBag.Query.Equals("dmprintvendor"))
+    @if (ViewBag.Query.Equals("turnkeylookup") || ViewBag.Query.Equals("dmmaster") || ViewBag.Query.Equals("dmgglog") || ViewBag.Query.Equals("dmprintvendor") || ViewBag.Query.Equals("apdprintjob"))
     {
         <tr>
             <td>UAVC: </td>

@@ -64,6 +64,13 @@ namespace SupportPortal.Models
             string internalQuery;
             switch (query)
             {
+                case "apdprintjob":
+                    databaseConn = GetConnGSProdAuto();
+                    internalQuery = "SELECT * FROM [GSProductAutomation].[DirectMail].[APD_DMPrintJobProcessing] WHERE [PageOrderName] IS NOT NULL ";
+                    internalQuery += COMMON.IsEmptyOrNull(jobid) ? "" : "AND [JobID] LIKE '%" + jobid + "%' ";
+                    internalQuery += COMMON.IsEmptyOrNull(uavc) ? "" : "AND [PageOrderName] LIKE '%" + uavc + "%' ";
+                    return internalQuery;
+
                 case "checkimportspider":
                     databaseConn = GetConnMistralAnn();
                     return "Select * from twistuser.check_import Order by import_start desc";

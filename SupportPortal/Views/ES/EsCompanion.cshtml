@@ -192,7 +192,7 @@ new { @class = "action-dropdown" })
                     <form class="form" name="UpdateSectionMetadata" id="dm-section-update">
                         @Html.HiddenFor(m => m.Customer, new { id = "hidden-customer", @Value = "dm" })
                         @Html.HiddenFor(m => m.CurrentEnvironmment, new { @class = "hidden-environment" })
-                        <h4>Attempts to Update Direct Mail Page Order Metadata in ES (Creates Placeholder if it does not exist and there is available data)</h4>
+                        <h4>Attempts to Update - or Create if it does not exist - Direct Mail Page Order Metadata in ES using PE Data Table</h4>
                         <table>
                             <tr>
                                 <td>@Html.Label("In Home Week: ")</td>
@@ -203,7 +203,7 @@ new { @class = "action-dropdown" })
                                 <td>@Html.TextBoxFor(m => m.PageOrder)</td>
                             </tr>
                             <tr>
-                                <td colspan="2"><button type="submit" class="btn btn-primary" >Submit</button></td>
+                                <td colspan="2"><button type="submit" class="btn btn-primary">Submit</button></td>
                             </tr>
                         </table>
                         @*}*@
@@ -249,8 +249,12 @@ new { @class = "action-dropdown" })
                 </div>
             </div>
         </div>
-        @ViewBag.Response
-        <div style="color:purple" id="output"></div>
+        <div class="panel panel-default" hidden>
+            <div class="panel-heading"><b>Result</b> </div>
+            <div class="panel-body">
+                <div id="post-msg"> </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -263,6 +267,7 @@ new { @class = "action-dropdown" })
             $('.action-dropdown').change(function () {
                 $('.form').attr('hidden', true);
                 $('#' + this.value).removeAttr("hidden");
+                $('.panel').removeAttr("hidden");
             });
 
             $('#environment-select').change(function () {
@@ -310,11 +315,8 @@ new { @class = "action-dropdown" })
                     data: $(this).serialize(),
                     dataType: "json",
                     success: function (msg) {
-                        var output = $('#output');
-                        output.empty();
-                        console.log(msg);
-                        var result = JSON.stringify(msg);
-                        $('#output').append(document.createTextNode(result));
+                        var obj = JSON.parse(msg);
+                        $('#post-msg').html('<pre class="bg-success">' + JSON.stringify(obj, null, 2) + '</pre>');
                     },
                     error: function () {
                         return "error";
