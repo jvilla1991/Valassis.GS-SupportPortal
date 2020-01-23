@@ -77,7 +77,7 @@ namespace SupportPortal.Models
 
                 case "dmmaster":
                     databaseConn = GetConnGSProdAuto();
-                    internalQuery = "SELECT [InHomeWeek], [UAVC], [IHD], [OvID], [Complexity], [DTP], [FlagDoNotReleaseArt], [FlagJumpStart], [FuseRequestId], [GPON], [Hub], [JumpStartID], [PreferredArtist], [PrintVendor], [PrintWeek], [TouchType], [VendorQuoteNumber], [LastActivity], [ReceivedTime], [Status], [Active], [Interval] FROM [GSProductAutomation].[DirectMail].[DirectMail] " +
+                    internalQuery = "SELECT [InHomeWeek], [UAVC], [IHD], [OvID], [Complexity], [DTP], [FlagDoNotReleaseArt], [FlagJumpStart], [FuseRequestId], [GPON], [Hub], [JumpStartID], [PagePosition], [PreferredArtist], [PrintVendor], [PrintWeek], [TouchType], [VendorQuoteNumber], [LastActivity], [ReceivedTime], [Status], [Active], [Interval] FROM [GSProductAutomation].[DirectMail].[DirectMail] " +
                         "WHERE UAVC IS NOT NULL ";
                     internalQuery += COMMON.IsEmptyOrNull(inhomeweek) ? "" : "AND [InHomeWeek] LIKE '%" + inhomeweek + "%' ";
                     internalQuery += COMMON.IsEmptyOrNull(uavc) ? "" : "AND [UAVC] LIKE '%" + uavc + "%' ";
